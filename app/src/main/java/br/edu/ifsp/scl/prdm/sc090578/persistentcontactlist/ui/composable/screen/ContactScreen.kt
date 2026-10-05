@@ -15,11 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.edu.ifsp.scl.prdm.sc090578.persistentcontactlist.model.Contact
+import br.edu.ifsp.scl.prdm.sc090578.persistentcontactlist.model.Operation
 import br.edu.ifsp.scl.prdm.sc090578.persistentcontactlist.ui.theme.PersistentContactListTheme
 
 @Composable
-fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit: (Contact) -> Unit) {
+fun ContactScreen(contact: Contact, operation: Operation, modifier: Modifier = Modifier, onSaveAndQuit: (Contact) -> Unit) {
     var currentContact by rememberSaveable { mutableStateOf(contact) }
+    val isFieldsEnabled = operation == Operation.NEW_OR_EDIT
     Column(modifier = modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = currentContact.name,
@@ -27,6 +29,7 @@ fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit
             onValueChange = {
                 currentContact = currentContact.copy(name = it)
             },
+            enabled = isFieldsEnabled,
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
@@ -35,6 +38,7 @@ fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit
             onValueChange = {
                 currentContact = currentContact.copy(address = it)
             },
+            enabled = isFieldsEnabled,
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
@@ -43,6 +47,7 @@ fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit
             onValueChange = {
                 currentContact = currentContact.copy(phone = it)
             },
+            enabled = isFieldsEnabled,
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
@@ -51,15 +56,18 @@ fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit
             onValueChange = {
                 currentContact = currentContact.copy(email = it)
             },
+            enabled = isFieldsEnabled,
             modifier = Modifier.fillMaxWidth()
         )
-        Button(
-            onClick = {
-                onSaveAndQuit(currentContact)
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Save and quit")
+        if (isFieldsEnabled) {
+            Button(
+                onClick = {
+                    onSaveAndQuit(currentContact)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Save and quit")
+            }
         }
     }
 }
@@ -70,7 +78,8 @@ fun ContactScreen(contact: Contact, modifier: Modifier = Modifier, onSaveAndQuit
 fun ContactScreenPreview() {
     PersistentContactListTheme {
         ContactScreen(
-            contact = Contact()
+            contact = Contact(),
+            operation = Operation.VIEW
         ) { }
     }
 }

@@ -14,8 +14,11 @@ fun ContactRoute(
     onDone: () -> Unit
 ) {
     val contact by contactViewModel.currentContact.collectAsStateWithLifecycle()
+    val operation by contactViewModel.operation.collectAsStateWithLifecycle()
+
     ContactScreen(
         contact = contact,
+        operation = operation,
         modifier = modifier,
         onSaveAndQuit = { newOrEditedContact ->
             contactViewModel.saveContact(newOrEditedContact)

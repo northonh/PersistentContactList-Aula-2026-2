@@ -23,7 +23,10 @@ fun MainNavHost(
         modifier = modifier
     ) {
         composable(route = Screen.List.route) {
-            ListRoute(contactViewModel)
+            ListRoute(
+                contactViewModel = contactViewModel,
+                onNavigate = { navHostController.navigate(Screen.Contact.route) }
+            )
         }
         composable(route = Screen.Contact.route) {
             ContactRoute(contactViewModel) { navHostController.popBackStack() }
